@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity
     //  private static ToDoDatabase db;
     // private static List<TodoListItem> todoList;
     //  private static ToDoListAdapter adapter;
-    private ToDoViewModel mToDoViewModel;
+    public static ToDoViewModel mToDoViewModel;
     public static final String TODO_CODE = "1001";
     private static final String FLOAT_ID = "1000";
     public static final int TODO_REQUEST = 101;
@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity
         final TodoListAdapter adapter = new TodoListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.addItemDecoration(new LineDecoration(this));
 
         mToDoViewModel = ViewModelProviders.of(this).get(ToDoViewModel.class);
 
@@ -160,5 +161,9 @@ public class MainActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    public static ToDoViewModel getmToDoViewModel() {
+        return mToDoViewModel;
     }
 }

@@ -1,6 +1,7 @@
 package com.tbm.todo;
 
 
+import android.arch.lifecycle.ViewModel;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -54,7 +55,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoVi
     }
 
     @Override
-    public void onBindViewHolder(ToDoViewHolder holder, int position) {
+    public void onBindViewHolder(final ToDoViewHolder holder, int position) {
         final ToDoItem item = mToDoList.get(position);
 //        List<TodoListItem> mToDoList = MainActivity.getTodoList();
 //        RecyclerView.Adapter mAdapter = MainActivity.getAdapter();
@@ -78,7 +79,7 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoVi
         /**updating the tickbox if there is a selection
          *
          */
-        /*holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.mCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if(holder.mCheckBox.isChecked()){
@@ -95,10 +96,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoVi
                     holder.mTextView.setPaintFlags( holder.mTextView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
                 }
 
-                mDB.toDoDao().updateToDo(item);
+                ToDoViewModel viewModel = MainActivity.getmToDoViewModel();
+                viewModel.update(item);
+
+               // mDB.toDoDao().updateToDo(item);
 
             }
-        });*/
+        });
 
 
         /**
