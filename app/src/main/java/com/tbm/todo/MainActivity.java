@@ -48,8 +48,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(MainActivity.this, ToDoEditor.class);
+                intent.putExtra(TODO_CODE, "create");
+                startActivityForResult(intent,TODO_REQUEST);
             }
         });
 
