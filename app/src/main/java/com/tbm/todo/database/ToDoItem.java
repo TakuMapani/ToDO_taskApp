@@ -4,12 +4,14 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.util.UUID;
 
 @Entity(tableName = "todo_table")
-public class ToDoItem {
+public class ToDoItem implements Parcelable {
 
     @PrimaryKey
     @NonNull
@@ -60,4 +62,35 @@ public class ToDoItem {
 
     public ToDoItem() {
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.noteID);
+        dest.writeString(this.noteText);
+        dest.writeInt(this.noteCompleted);
+    }
+
+    protected ToDoItem(Parcel in) {
+        this.noteID = in.readString();
+        this.noteText = in.readString();
+        this.noteCompleted = in.readInt();
+    }
+
+    public static final Parcelable.Creator<ToDoItem> CREATOR = new Parcelable.Creator<ToDoItem>() {
+        @Override
+        public ToDoItem createFromParcel(Parcel source) {
+            return new ToDoItem(source);
+        }
+
+        @Override
+        public ToDoItem[] newArray(int size) {
+            return new ToDoItem[size];
+        }
+    };
 }

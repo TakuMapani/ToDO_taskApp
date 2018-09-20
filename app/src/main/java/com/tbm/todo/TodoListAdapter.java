@@ -16,11 +16,13 @@ import android.widget.TextView;
 import com.tbm.todo.database.ToDoDatabase;
 import com.tbm.todo.database.ToDoItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoViewHolder> {
     public static final String TODO_TEXT = "todo_text";
     public static final String TODO_ID = "todo_id";
+    public static final String ITEM_KEY = "item_key";
     private Context context;
 
     class ToDoViewHolder extends RecyclerView.ViewHolder {
@@ -102,16 +104,18 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoVi
         /**
         crossing out the text when the checkbox is active
          */
-        /*if(item.getNoteCompleted() == 1){
+        if(item.getNoteCompleted() == 1){
             holder.mCheckBox.setChecked(true);
             holder.mTextView.setPaintFlags(holder.mTextView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         }else{
             holder.mCheckBox.setChecked(false);
             holder.mTextView.setPaintFlags( holder.mTextView.getPaintFlags() & (~ Paint.STRIKE_THRU_TEXT_FLAG));
-        }*/
+        }
 
         /**
-        opening the ToDoItem to update it in @see com.tbm.todo.ToDoEditor.onCreate()
+         * opening the ToDoItem to update it in @see com.tbm.todo.ToDoEditor.onCreate()
+         * The intent should send the object to the editor activity
+         *
          */
         final String finalTdText = tdText;
         holder.mVIew.setOnClickListener(new View.OnClickListener() {
@@ -119,8 +123,9 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.ToDoVi
             public void onClick(View view) {
                 Intent intent = new Intent(context, ToDoEditor.class);
                 intent.putExtra("1001", "update");
-                intent.putExtra(TODO_TEXT, finalTdText);
-                intent.putExtra(TODO_ID,item.getNoteID());
+                intent.putExtra(ITEM_KEY,  item);
+                /*intent.putExtra(TODO_TEXT, finalTdText);
+                intent.putExtra(TODO_ID,item.getNoteID());*/
                 ((MainActivity) context).startActivityForResult(intent, 101);
             }
         });

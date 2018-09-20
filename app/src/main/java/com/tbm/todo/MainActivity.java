@@ -1,6 +1,10 @@
 package com.tbm.todo;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,9 +18,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import com.tbm.todo.database.ToDoItem;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    //  private static ToDoDatabase db;
+    // private static List<TodoListItem> todoList;
+    //  private static ToDoListAdapter adapter;
+    private ToDoViewModel mToDoViewModel;
+    public static final String TODO_CODE = "1001";
+    private static final String FLOAT_ID = "1000";
+    public static final int TODO_REQUEST = 101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +41,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +66,15 @@ public class MainActivity extends AppCompatActivity
         final TodoListAdapter adapter = new TodoListAdapter(this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        mToDoViewModel = ViewModelProviders.of(this).get(ToDoViewModel.class);
+
+        mToDoViewModel.getAllTodos().observe(this, new Observer<List<ToDoItem>>() {
+            @Override
+            public void onChanged(@Nullable List<ToDoItem> toDoItems) {
+                adapter.setWords(toDoItems);
+            }
+        });
     }
 
     @Override
@@ -104,5 +132,28 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == TODO_REQUEST) {
+            ToDoItem resultToDoItem = data.getExtras().getParcelable(ToDoEditor.RESULT_ITEM);
+            switch (requestCode){
+                case ToDoEditor.RESULT_CREATE:
+                    mToDoViewModel.insert(resultToDoItem);
+                    break;
+                case ToDoEditor.RESULT_UPDATE:
+                    mToDoViewModel.update(resultToDoItem);
+                    break;
+                case ToDoEditor.RESULT_DELETE:
+                    mToDoViewModel.delete(resultToDoItem);
+                    break;
+                default:
+                    Toast.makeText(this, "failed operation", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
     }
 }
