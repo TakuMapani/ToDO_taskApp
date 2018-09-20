@@ -1,13 +1,12 @@
 package com.tbm.todo;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 
-import com.tbm.todo.database.ToDoDatabase;
 import com.tbm.todo.database.ToDoItem;
 
 

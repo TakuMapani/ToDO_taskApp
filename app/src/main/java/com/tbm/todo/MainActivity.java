@@ -140,20 +140,24 @@ public class MainActivity extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == TODO_REQUEST) {
-            ToDoItem resultToDoItem = data.getExtras().getParcelable(ToDoEditor.RESULT_ITEM);
-            switch (requestCode){
-                case ToDoEditor.RESULT_CREATE:
-                    mToDoViewModel.insert(resultToDoItem);
-                    break;
-                case ToDoEditor.RESULT_UPDATE:
-                    mToDoViewModel.update(resultToDoItem);
-                    break;
-                case ToDoEditor.RESULT_DELETE:
-                    mToDoViewModel.delete(resultToDoItem);
-                    break;
-                default:
-                    Toast.makeText(this, "failed operation", Toast.LENGTH_SHORT).show();
-                    break;
+            if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "no ToDo created", Toast.LENGTH_SHORT).show();
+            } else {
+                ToDoItem resultToDoItem = data.getExtras().getParcelable(ToDoEditor.RESULT_ITEM);
+                switch (resultCode) {
+                    case ToDoEditor.RESULT_CREATE:
+                        mToDoViewModel.insert(resultToDoItem);
+                        break;
+                    case ToDoEditor.RESULT_UPDATE:
+                        mToDoViewModel.update(resultToDoItem);
+                        break;
+                    case ToDoEditor.RESULT_DELETE:
+                        mToDoViewModel.delete(resultToDoItem);
+                        break;
+                    default:
+                        Toast.makeText(this, "failed operation", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
         }
     }
